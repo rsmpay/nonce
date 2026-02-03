@@ -1,0 +1,22 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:xmtp.org)",
+      "WebSearch",
+      "Bash(export PATH=\"/opt/homebrew/bin:$PATH\")",
+      "Bash(npm install:*)",
+      "Bash(npm run dev:*)",
+      "Bash(claude mcp:*)",
+      "WebFetch(domain:mcp.supabase.com)",
+      "mcp__plugin_supabase_supabase__execute_sql",
+      "mcp__plugin_supabase_supabase__list_tables",
+      "mcp__plugin_supabase_supabase__apply_migration",
+      "Bash(ls:*)",
+      "WebFetch(domain:muz.li)",
+      "WebFetch(domain:multitaskai.com)",
+      "Bash(xargs:*)",
+      "Bash(git init:*)",
+      "Bash(git add:*)"
+    ]
+  }
+}
