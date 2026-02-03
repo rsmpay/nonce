@@ -83,6 +83,7 @@ export default function ProfileSetupPage() {
       }
 
       // Create user profile
+      // @ts-expect-error - Supabase type inference issue
       const { error: insertError } = await supabase.from("users").insert({
         id: user.id,
         email: user.email!,
@@ -103,12 +104,12 @@ export default function ProfileSetupPage() {
   };
 
   return (
-    <main className="min-h-screen flex flex-col items-center justify-center p-6 bg-gradient-to-b from-background to-surface">
+    <main className="min-h-screen flex flex-col items-center justify-center p-6 bg-gradient-to-b from-obsidian to-onyx">
       <div className="max-w-md w-full space-y-8">
         {/* Header */}
         <div className="text-center space-y-2">
-          <h1 className="text-2xl font-bold text-white">프로필 설정</h1>
-          <p className="text-gray-400">커뮤니티에서 사용할 프로필을 설정하세요</p>
+          <h1 className="text-2xl font-bold text-steel-100 font-display">프로필 설정</h1>
+          <p className="text-steel-400">커뮤니티에서 사용할 프로필을 설정하세요</p>
         </div>
 
         {/* Error message */}
@@ -124,7 +125,7 @@ export default function ProfileSetupPage() {
             <button
               type="button"
               onClick={handleAvatarClick}
-              className="relative w-24 h-24 rounded-full bg-surface-light border-2 border-dashed border-gray-600 hover:border-primary-500 transition-colors overflow-hidden group"
+              className="relative w-24 h-24 rounded-xl bg-glass border-2 border-dashed border-steel-500 hover:border-gold transition-colors overflow-hidden group"
             >
               {avatarUrl ? (
                 <Image
@@ -134,7 +135,7 @@ export default function ProfileSetupPage() {
                   className="object-cover"
                 />
               ) : (
-                <div className="flex flex-col items-center justify-center h-full text-gray-400 group-hover:text-primary-500">
+                <div className="flex flex-col items-center justify-center h-full text-steel-400 group-hover:text-gold">
                   <svg
                     className="w-8 h-8"
                     fill="none"
@@ -150,9 +151,9 @@ export default function ProfileSetupPage() {
                   </svg>
                 </div>
               )}
-              <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+              <div className="absolute inset-0 bg-obsidian/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                 <svg
-                  className="w-6 h-6 text-white"
+                  className="w-6 h-6 text-gold"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -185,7 +186,7 @@ export default function ProfileSetupPage() {
           <div className="space-y-2">
             <label
               htmlFor="nickname"
-              className="block text-sm font-medium text-gray-300"
+              className="block text-sm font-medium text-steel-200"
             >
               닉네임
             </label>
@@ -196,9 +197,9 @@ export default function ProfileSetupPage() {
               onChange={(e) => setNickname(e.target.value)}
               placeholder="닉네임을 입력하세요"
               maxLength={20}
-              className="w-full px-4 py-3 bg-surface-light border border-gray-700 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-primary-500 transition-colors"
+              className="w-full px-4 py-3 bg-obsidian border border-steel-500 rounded-xl text-steel-100 placeholder-steel-500 focus:outline-none focus:border-gold focus:ring-1 focus:ring-gold/30 transition-all"
             />
-            <p className="text-xs text-gray-500 text-right">
+            <p className="text-xs text-steel-500 text-right">
               {nickname.length}/20
             </p>
           </div>
@@ -207,7 +208,7 @@ export default function ProfileSetupPage() {
           <button
             type="submit"
             disabled={loading || !nickname.trim()}
-            className="w-full py-4 px-6 bg-primary-600 hover:bg-primary-700 disabled:bg-gray-700 disabled:cursor-not-allowed text-white font-semibold rounded-xl transition-colors flex items-center justify-center gap-2"
+            className="w-full py-4 px-6 bg-gradient-to-b from-gold to-gold-dark hover:from-gold-light hover:to-gold disabled:from-steel-500 disabled:to-steel-500 disabled:cursor-not-allowed text-obsidian font-semibold rounded-xl transition-all shadow-gold-md disabled:shadow-none flex items-center justify-center gap-2"
           >
             {loading ? (
               <>

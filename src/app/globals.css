@@ -3,8 +3,35 @@
 @tailwind utilities;
 
 :root {
-  --background: #0f0f0f;
-  --foreground: #ffffff;
+  /* Obsidian Vault Color System */
+  --obsidian: #09090b;
+  --onyx: #121215;
+  --glass: #1c1c21;
+
+  /* Gold Accents */
+  --gold: #c9a227;
+  --gold-dark: #9e7b1a;
+  --gold-light: #f4e4a6;
+
+  /* Steel Neutrals */
+  --steel-100: #e8e8ec;
+  --steel-200: #c4c4cc;
+  --steel-300: #9898a4;
+  --steel-400: #6b6b7a;
+  --steel-500: #45455a;
+
+  /* Semantic */
+  --success: #22c55e;
+  --warning: #f59e0b;
+  --error: #dc2626;
+
+  /* Hairline Border */
+  --gold-hairline: rgba(201, 162, 39, 0.12);
+  --gold-subtle: rgba(201, 162, 39, 0.2);
+
+  /* Background & Foreground */
+  --background: var(--obsidian);
+  --foreground: var(--steel-100);
 }
 
 * {
@@ -26,9 +53,10 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Custom scrollbar */
+/* Obsidian Vault Scrollbar */
 ::-webkit-scrollbar {
   width: 6px;
+  height: 6px;
 }
 
 ::-webkit-scrollbar-track {
@@ -36,12 +64,18 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #404040;
+  background: var(--steel-500);
   border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #525252;
+  background: var(--steel-400);
+}
+
+/* Firefox scrollbar */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--steel-500) transparent;
 }
 
 /* Safe area padding for mobile */
@@ -53,7 +87,23 @@ body {
   padding-top: env(safe-area-inset-top, 0);
 }
 
-/* Message bubble animations */
+/* Vault Reveal Animation - for messages and modals */
+@keyframes vault-reveal {
+  0% {
+    opacity: 0;
+    transform: translateY(8px) scale(0.98);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.vault-reveal {
+  animation: vault-reveal 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Legacy animation support */
 @keyframes slideIn {
   from {
     opacity: 0;
@@ -66,5 +116,105 @@ body {
 }
 
 .message-enter {
-  animation: slideIn 0.2s ease-out;
+  animation: vault-reveal 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Gold Pulse Animation */
+@keyframes gold-pulse {
+  0%, 100% {
+    opacity: 1;
+    box-shadow: 0 0 0 0 rgba(201, 162, 39, 0.4);
+  }
+  50% {
+    opacity: 0.85;
+    box-shadow: 0 0 0 8px rgba(201, 162, 39, 0);
+  }
+}
+
+.gold-pulse {
+  animation: gold-pulse 2s ease-in-out infinite;
+}
+
+/* Gold Shimmer for loading states */
+@keyframes gold-shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.gold-shimmer {
+  background: linear-gradient(
+    90deg,
+    var(--gold-dark) 0%,
+    var(--gold-light) 50%,
+    var(--gold-dark) 100%
+  );
+  background-size: 200% 100%;
+  animation: gold-shimmer 2s linear infinite;
+}
+
+/* Gold Gradient for buttons and accents */
+.gold-gradient {
+  background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%);
+}
+
+.gold-gradient-subtle {
+  background: linear-gradient(135deg, rgba(201, 162, 39, 0.15) 0%, rgba(158, 123, 26, 0.1) 100%);
+}
+
+/* Hairline Gold Border utility */
+.border-gold-hairline {
+  border-color: var(--gold-hairline);
+}
+
+.border-gold-subtle {
+  border-color: var(--gold-subtle);
+}
+
+/* Glass Effect for overlays */
+.glass-effect {
+  background: rgba(28, 28, 33, 0.8);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+/* Vault Shadow - multi-layer depth effect */
+.vault-shadow {
+  box-shadow:
+    0 4px 6px -1px rgba(0, 0, 0, 0.3),
+    0 2px 4px -2px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+/* Gold Glow for active/focus states */
+.gold-glow {
+  box-shadow: 0 0 20px rgba(201, 162, 39, 0.3);
+}
+
+/* Active state with gold left border */
+.active-gold-border {
+  border-left: 2px solid var(--gold);
+  background: linear-gradient(90deg, rgba(201, 162, 39, 0.08) 0%, transparent 100%);
+}
+
+/* Text selection */
+::selection {
+  background-color: rgba(201, 162, 39, 0.3);
+  color: var(--steel-100);
+}
+
+/* Focus ring */
+.focus-gold:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--obsidian), 0 0 0 4px var(--gold);
+}
+
+/* Wallet address / monospace styling */
+.font-mono-vault {
+  font-family: 'JetBrains Mono', monospace;
+  font-feature-settings: 'tnum' on, 'lnum' on;
+  letter-spacing: -0.02em;
 }

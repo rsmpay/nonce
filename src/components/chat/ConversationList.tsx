@@ -20,9 +20,9 @@ export function ConversationList({
   if (conversations.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center h-full text-center p-6">
-        <div className="w-16 h-16 bg-surface-light rounded-full flex items-center justify-center mb-4">
+        <div className="w-16 h-16 bg-glass rounded-xl flex items-center justify-center mb-4 border border-steel-500/30">
           <svg
-            className="w-8 h-8 text-gray-500"
+            className="w-8 h-8 text-steel-500"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -35,8 +35,8 @@ export function ConversationList({
             />
           </svg>
         </div>
-        <p className="text-gray-400">아직 대화가 없습니다</p>
-        <p className="text-sm text-gray-500 mt-1">
+        <p className="text-steel-300">아직 대화가 없습니다</p>
+        <p className="text-sm text-steel-500 mt-1">
           새 대화를 시작하거나 그룹에 참여하세요
         </p>
       </div>
@@ -94,9 +94,9 @@ function ConversationItem({
   const getTypeIcon = () => {
     if (conversation.type === "channel") {
       return (
-        <div className="absolute -bottom-0.5 -right-0.5 w-4 h-4 bg-surface rounded-full flex items-center justify-center">
+        <div className="absolute -bottom-0.5 -right-0.5 w-4 h-4 bg-onyx rounded-md flex items-center justify-center border border-steel-500/30">
           <svg
-            className="w-2.5 h-2.5 text-gray-400"
+            className="w-2.5 h-2.5 text-gold"
             fill="currentColor"
             viewBox="0 0 20 20"
           >
@@ -111,9 +111,9 @@ function ConversationItem({
     }
     if (conversation.type === "group") {
       return (
-        <div className="absolute -bottom-0.5 -right-0.5 w-4 h-4 bg-surface rounded-full flex items-center justify-center">
+        <div className="absolute -bottom-0.5 -right-0.5 w-4 h-4 bg-onyx rounded-md flex items-center justify-center border border-steel-500/30">
           <svg
-            className="w-2.5 h-2.5 text-gray-400"
+            className="w-2.5 h-2.5 text-steel-400"
             fill="currentColor"
             viewBox="0 0 20 20"
           >
@@ -129,24 +129,36 @@ function ConversationItem({
     <button
       onClick={onClick}
       className={cn(
-        "w-full flex items-center gap-3 p-4 hover:bg-surface-light transition-colors text-left",
-        isActive && "bg-surface-light"
+        "w-full flex items-center gap-3 p-4 transition-all duration-200 text-left relative",
+        isActive
+          ? "bg-gradient-to-r from-gold/10 to-transparent border-l-2 border-gold"
+          : "hover:bg-glass/50 border-l-2 border-transparent"
       )}
     >
-      <div className="relative">
+      {/* Gold glow effect for active state */}
+      {isActive && (
+        <div className="absolute left-0 top-0 bottom-0 w-24 bg-gradient-to-r from-gold/5 to-transparent pointer-events-none" />
+      )}
+
+      <div className="relative z-10">
         <Avatar src={avatar} name={name} size="lg" />
         {getTypeIcon()}
       </div>
-      <div className="flex-1 min-w-0">
+      <div className="flex-1 min-w-0 z-10">
         <div className="flex items-center justify-between gap-2">
-          <span className="font-medium text-white truncate">{name}</span>
+          <span className={cn(
+            "font-medium truncate",
+            isActive ? "text-gold-light" : "text-steel-100"
+          )}>
+            {name}
+          </span>
           {lastMessage && (
-            <span className="text-xs text-gray-500 flex-shrink-0">
+            <span className="text-xs text-steel-500 flex-shrink-0">
               {formatMessageTime(lastMessage.created_at)}
             </span>
           )}
         </div>
-        <p className="text-sm text-gray-400 truncate mt-0.5">
+        <p className="text-sm text-steel-400 truncate mt-0.5">
           {lastMessage ? (
             <>
               {lastMessage.image_url && !lastMessage.content

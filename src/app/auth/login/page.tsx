@@ -29,17 +29,17 @@ export default function LoginPage() {
   };
 
   return (
-    <main className="min-h-screen flex flex-col items-center justify-center p-6 bg-gradient-to-b from-background to-surface">
+    <main className="min-h-screen flex flex-col items-center justify-center p-6 bg-gradient-to-b from-obsidian to-onyx">
       <div className="max-w-md w-full space-y-8">
         {/* Header */}
         <div className="text-center space-y-2">
           <Link href="/" className="inline-block">
-            <div className="w-16 h-16 mx-auto bg-primary-600 rounded-xl flex items-center justify-center">
-              <span className="text-2xl font-bold text-white">N</span>
+            <div className="w-16 h-16 mx-auto bg-gradient-to-br from-gold to-gold-dark rounded-xl flex items-center justify-center shadow-gold-lg">
+              <span className="text-2xl font-bold text-obsidian font-display">N</span>
             </div>
           </Link>
-          <h1 className="text-2xl font-bold text-white">로그인</h1>
-          <p className="text-gray-400">소셜 계정으로 간편하게 시작하세요</p>
+          <h1 className="text-2xl font-bold text-steel-100 font-display">로그인</h1>
+          <p className="text-steel-400">소셜 계정으로 간편하게 시작하세요</p>
         </div>
 
         {/* Error message */}
@@ -86,7 +86,7 @@ export default function LoginPage() {
           <button
             onClick={() => handleSocialLogin("apple")}
             disabled={loading !== null}
-            className="w-full flex items-center justify-center gap-3 py-4 px-6 bg-black hover:bg-gray-900 text-white font-medium rounded-xl border border-gray-700 transition-colors disabled:opacity-50"
+            className="w-full flex items-center justify-center gap-3 py-4 px-6 bg-obsidian hover:bg-glass text-steel-100 font-medium rounded-xl border border-steel-500/30 transition-colors disabled:opacity-50"
           >
             {loading === "apple" ? (
               <Spinner />
@@ -116,13 +116,13 @@ export default function LoginPage() {
         </div>
 
         {/* Footer */}
-        <p className="text-center text-sm text-gray-500">
+        <p className="text-center text-sm text-steel-500">
           로그인하면{" "}
-          <a href="#" className="text-primary-500 hover:underline">
+          <a href="#" className="text-gold hover:underline">
             이용약관
           </a>
           과{" "}
-          <a href="#" className="text-primary-500 hover:underline">
+          <a href="#" className="text-gold hover:underline">
             개인정보처리방침
           </a>
           에 동의하게 됩니다.

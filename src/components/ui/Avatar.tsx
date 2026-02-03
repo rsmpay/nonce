@@ -11,10 +11,10 @@ interface AvatarProps {
 }
 
 const sizeClasses = {
-  sm: "w-8 h-8 text-xs",
-  md: "w-10 h-10 text-sm",
-  lg: "w-12 h-12 text-base",
-  xl: "w-16 h-16 text-lg",
+  sm: "w-8 h-8 text-xs rounded-md",
+  md: "w-10 h-10 text-sm rounded-lg",
+  lg: "w-12 h-12 text-base rounded-lg",
+  xl: "w-16 h-16 text-lg rounded-xl",
 };
 
 export function Avatar({ src, name, size = "md", className }: AvatarProps) {
@@ -24,7 +24,10 @@ export function Avatar({ src, name, size = "md", className }: AvatarProps) {
     return (
       <div
         className={cn(
-          "relative rounded-full overflow-hidden bg-surface-light flex-shrink-0",
+          "relative overflow-hidden bg-glass flex-shrink-0",
+          "ring-1 ring-steel-500/50",
+          "transition-all duration-200 ease-out",
+          "hover:ring-2 hover:ring-gold/50",
           sizeClasses[size],
           className
         )}
@@ -37,7 +40,11 @@ export function Avatar({ src, name, size = "md", className }: AvatarProps) {
   return (
     <div
       className={cn(
-        "rounded-full bg-primary-600 flex items-center justify-center font-semibold text-white flex-shrink-0",
+        "flex items-center justify-center font-semibold flex-shrink-0",
+        "bg-gradient-to-br from-gold to-gold-dark text-obsidian",
+        "ring-1 ring-gold/30",
+        "transition-all duration-200 ease-out",
+        "hover:ring-2 hover:ring-gold/50",
         sizeClasses[size],
         className
       )}

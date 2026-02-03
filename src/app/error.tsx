@@ -15,9 +15,9 @@ export default function Error({
   }, [error]);
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-background p-6">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-obsidian p-6">
       <div className="text-center space-y-4 max-w-md">
-        <div className="w-16 h-16 mx-auto bg-red-500/20 rounded-full flex items-center justify-center">
+        <div className="w-16 h-16 mx-auto bg-red-500/10 rounded-xl flex items-center justify-center border border-red-500/20">
           <svg
             className="w-8 h-8 text-red-400"
             fill="none"
@@ -32,10 +32,10 @@ export default function Error({
             />
           </svg>
         </div>
-        <h2 className="text-xl font-semibold text-white">
+        <h2 className="text-xl font-semibold text-steel-100 font-display">
           문제가 발생했습니다
         </h2>
-        <p className="text-gray-400">
+        <p className="text-steel-400">
           예상치 못한 오류가 발생했습니다. 다시 시도해 주세요.
         </p>
         <Button onClick={reset}>다시 시도</Button>

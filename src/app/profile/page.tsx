@@ -94,6 +94,7 @@ export default function ProfilePage() {
       // Update user profile
       const { data, error } = await supabase
         .from("users")
+        // @ts-expect-error - Supabase type inference issue
         .update({
           nickname: nickname.trim(),
           avatar_url: finalAvatarUrl,
@@ -116,8 +117,8 @@ export default function ProfilePage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-500" />
+      <div className="min-h-screen flex items-center justify-center bg-obsidian">
+        <div className="w-8 h-8 border-2 border-gold/30 border-t-gold rounded-full animate-spin" />
       </div>
     );
   }
@@ -128,16 +129,16 @@ export default function ProfilePage() {
   }
 
   return (
-    <main className="min-h-screen bg-background">
+    <main className="min-h-screen bg-obsidian">
       {/* Header */}
-      <div className="sticky top-0 bg-surface border-b border-gray-800 z-10">
+      <div className="sticky top-0 bg-onyx border-b border-steel-500/30 z-10">
         <div className="max-w-md mx-auto px-4 py-4 flex items-center gap-3">
           <button
             onClick={() => router.back()}
-            className="p-2 -ml-2 hover:bg-surface-light rounded-full transition-colors"
+            className="p-2 -ml-2 hover:bg-glass rounded-lg transition-colors"
           >
             <svg
-              className="w-5 h-5 text-gray-400"
+              className="w-5 h-5 text-steel-400"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -150,7 +151,7 @@ export default function ProfilePage() {
               />
             </svg>
           </button>
-          <h1 className="text-xl font-bold text-white">프로필 설정</h1>
+          <h1 className="text-xl font-bold text-steel-100 font-display">프로필 설정</h1>
         </div>
       </div>
 
@@ -162,9 +163,9 @@ export default function ProfilePage() {
             <button
               onClick={handleAvatarClick}
               disabled={!isEditing}
-              className={`relative w-28 h-28 rounded-full overflow-hidden ${
+              className={`relative w-28 h-28 rounded-xl overflow-hidden ${
                 isEditing
-                  ? "cursor-pointer"
+                  ? "cursor-pointer ring-2 ring-gold/50"
                   : "cursor-default"
               }`}
             >
@@ -179,9 +180,9 @@ export default function ProfilePage() {
                 <Avatar src={null} name={user.nickname} size="xl" className="w-28 h-28 text-2xl" />
               )}
               {isEditing && (
-                <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
+                <div className="absolute inset-0 bg-obsidian/60 flex items-center justify-center">
                   <svg
-                    className="w-8 h-8 text-white"
+                    className="w-8 h-8 text-gold"
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"
@@ -241,11 +242,11 @@ export default function ProfilePage() {
           ) : (
             <>
               <div className="text-center">
-                <h2 className="text-2xl font-bold text-white">
+                <h2 className="text-2xl font-bold text-steel-100 font-display">
                   {user.nickname}
                 </h2>
-                <p className="text-gray-400 mt-1">{user.email}</p>
-                <span className="inline-block mt-2 px-3 py-1 bg-surface-light rounded-full text-sm text-gray-300">
+                <p className="text-steel-400 mt-1">{user.email}</p>
+                <span className="inline-block mt-2 px-3 py-1 bg-glass rounded-lg text-sm text-gold border border-gold-hairline">
                   {user.role === "owner"
                     ? "Owner"
                     : user.role === "admin"

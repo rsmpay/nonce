@@ -58,14 +58,17 @@ export default function InviteManagePage() {
           ).toISOString()
         : null;
 
+      const insertData = {
+        code,
+        created_by: user.id,
+        expires_at: expiresAt,
+        max_uses: maxUses ? parseInt(maxUses) : null,
+      };
+
       const { data, error } = await supabase
         .from("invite_links")
-        .insert({
-          code,
-          created_by: user.id,
-          expires_at: expiresAt,
-          max_uses: maxUses ? parseInt(maxUses) : null,
-        })
+        // @ts-expect-error - Supabase type inference issue with RLS
+        .insert(insertData)
         .select()
         .single();
 
@@ -87,6 +90,7 @@ export default function InviteManagePage() {
     try {
       const { error } = await supabase
         .from("invite_links")
+        // @ts-expect-error - Supabase type inference issue with RLS
         .update({ is_active: !invite.is_active })
         .eq("id", invite.id);
 
@@ -106,10 +110,7 @@ export default function InviteManagePage() {
     if (!confirm("이 초대 링크를 삭제하시겠습니까?")) return;
 
     try {
-      const { error } = await supabase
-        .from("invite_links")
-        .delete()
-        .eq("id", id);
+      const { error } = await supabase.from("invite_links").delete().eq("id", id);
 
       if (error) throw error;
 
@@ -126,7 +127,7 @@ export default function InviteManagePage() {
   };
 
   const getInviteStatus = (invite: InviteLink) => {
-    if (!invite.is_active) return { text: "비활성", color: "text-gray-500" };
+    if (!invite.is_active) return { text: "비활성", color: "text-steel-500" };
     if (invite.expires_at && new Date(invite.expires_at) < new Date()) {
       return { text: "만료됨", color: "text-red-400" };
     }
@@ -138,8 +139,8 @@ export default function InviteManagePage() {
 
   if (userLoading || loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-500" />
+      <div className="min-h-screen flex items-center justify-center bg-obsidian">
+        <div className="w-8 h-8 border-2 border-gold/30 border-t-gold rounded-full animate-spin" />
       </div>
     );
   }
@@ -149,17 +150,17 @@ export default function InviteManagePage() {
   }
 
   return (
-    <main className="min-h-screen bg-background">
+    <main className="min-h-screen bg-obsidian">
       {/* Header */}
-      <div className="sticky top-0 bg-surface border-b border-gray-800 z-10">
+      <div className="sticky top-0 bg-onyx border-b border-steel-500/30 z-10">
         <div className="max-w-2xl mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <button
               onClick={() => router.back()}
-              className="p-2 -ml-2 hover:bg-surface-light rounded-full transition-colors"
+              className="p-2 -ml-2 hover:bg-glass rounded-lg transition-colors"
             >
               <svg
-                className="w-5 h-5 text-gray-400"
+                className="w-5 h-5 text-steel-400"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -172,7 +173,7 @@ export default function InviteManagePage() {
                 />
               </svg>
             </button>
-            <h1 className="text-xl font-bold text-white">초대 링크 관리</h1>
+            <h1 className="text-xl font-bold text-steel-100 font-display">초대 링크 관리</h1>
           </div>
           <Button size="sm" onClick={() => setShowCreateModal(true)}>
             + 새 링크
@@ -184,9 +185,9 @@ export default function InviteManagePage() {
       <div className="max-w-2xl mx-auto px-4 py-6">
         {invites.length === 0 ? (
           <div className="text-center py-12">
-            <div className="w-16 h-16 mx-auto bg-surface-light rounded-full flex items-center justify-center mb-4">
+            <div className="w-16 h-16 mx-auto bg-glass rounded-xl flex items-center justify-center mb-4 border border-steel-500/30">
               <svg
-                className="w-8 h-8 text-gray-500"
+                className="w-8 h-8 text-steel-500"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -199,8 +200,8 @@ export default function InviteManagePage() {
                 />
               </svg>
             </div>
-            <p className="text-gray-400">아직 초대 링크가 없습니다</p>
-            <p className="text-sm text-gray-500 mt-1">
+            <p className="text-steel-300">아직 초대 링크가 없습니다</p>
+            <p className="text-sm text-steel-500 mt-1">
               새 초대 링크를 만들어 멤버를 초대하세요
             </p>
           </div>
@@ -211,11 +212,11 @@ export default function InviteManagePage() {
               return (
                 <div
                   key={invite.id}
-                  className="bg-surface rounded-xl p-4 space-y-3"
+                  className="bg-onyx rounded-xl p-4 space-y-3 border border-steel-500/20"
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                      <code className="text-lg font-mono text-white bg-surface-light px-3 py-1 rounded-lg">
+                      <code className="text-lg font-mono text-gold bg-glass px-3 py-1 rounded-lg border border-gold-hairline">
                         {invite.code}
                       </code>
                       <span className={`text-sm ${status.color}`}>
@@ -225,11 +226,11 @@ export default function InviteManagePage() {
                     <div className="flex items-center gap-1">
                       <button
                         onClick={() => copyToClipboard(invite.code)}
-                        className="p-2 hover:bg-surface-light rounded-full transition-colors"
+                        className="p-2 hover:bg-glass rounded-lg transition-colors"
                         title="링크 복사"
                       >
                         <svg
-                          className="w-4 h-4 text-gray-400"
+                          className="w-4 h-4 text-steel-400"
                           fill="none"
                           viewBox="0 0 24 24"
                           stroke="currentColor"
@@ -244,14 +245,14 @@ export default function InviteManagePage() {
                       </button>
                       <button
                         onClick={() => handleToggleActive(invite)}
-                        className="p-2 hover:bg-surface-light rounded-full transition-colors"
+                        className="p-2 hover:bg-glass rounded-lg transition-colors"
                         title={invite.is_active ? "비활성화" : "활성화"}
                       >
                         <svg
                           className={`w-4 h-4 ${
                             invite.is_active
                               ? "text-green-400"
-                              : "text-gray-400"
+                              : "text-steel-400"
                           }`}
                           fill="none"
                           viewBox="0 0 24 24"
@@ -271,7 +272,7 @@ export default function InviteManagePage() {
                       </button>
                       <button
                         onClick={() => handleDelete(invite.id)}
-                        className="p-2 hover:bg-surface-light rounded-full transition-colors"
+                        className="p-2 hover:bg-glass rounded-lg transition-colors"
                         title="삭제"
                       >
                         <svg
@@ -290,10 +291,10 @@ export default function InviteManagePage() {
                       </button>
                     </div>
                   </div>
-                  <div className="flex flex-wrap gap-4 text-sm text-gray-400">
+                  <div className="flex flex-wrap gap-4 text-sm text-steel-400">
                     <span>
                       사용:{" "}
-                      <span className="text-white">
+                      <span className="text-steel-100">
                         {invite.current_uses}
                         {invite.max_uses ? `/${invite.max_uses}` : ""}
                       </span>
@@ -301,14 +302,14 @@ export default function InviteManagePage() {
                     {invite.expires_at && (
                       <span>
                         만료:{" "}
-                        <span className="text-white">
+                        <span className="text-steel-100">
                           {formatFullTime(invite.expires_at)}
                         </span>
                       </span>
                     )}
                     <span>
                       생성:{" "}
-                      <span className="text-white">
+                      <span className="text-steel-100">
                         {formatFullTime(invite.created_at)}
                       </span>
                     </span>
@@ -324,20 +325,20 @@ export default function InviteManagePage() {
       {showCreateModal && (
         <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center">
           <div
-            className="absolute inset-0 bg-black/60"
+            className="absolute inset-0 bg-obsidian/80 backdrop-blur-sm"
             onClick={() => setShowCreateModal(false)}
           />
-          <div className="relative w-full sm:max-w-md bg-surface rounded-t-2xl sm:rounded-2xl p-6 space-y-6">
+          <div className="relative w-full sm:max-w-md bg-onyx rounded-t-2xl sm:rounded-2xl p-6 space-y-6 border border-gold-hairline vault-reveal vault-shadow">
             <div className="flex items-center justify-between">
-              <h2 className="text-lg font-semibold text-white">
+              <h2 className="text-lg font-semibold text-steel-100 font-display">
                 새 초대 링크 만들기
               </h2>
               <button
                 onClick={() => setShowCreateModal(false)}
-                className="p-1 hover:bg-surface-light rounded-full transition-colors"
+                className="p-1 hover:bg-glass rounded-lg transition-colors"
               >
                 <svg
-                  className="w-5 h-5 text-gray-400"
+                  className="w-5 h-5 text-steel-400"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -362,13 +363,13 @@ export default function InviteManagePage() {
                 min={1}
               />
               <div className="space-y-1.5">
-                <label className="block text-sm font-medium text-gray-300">
+                <label className="block text-sm font-medium text-steel-200">
                   만료 기간
                 </label>
                 <select
                   value={expiresInDays}
                   onChange={(e) => setExpiresInDays(e.target.value)}
-                  className="w-full px-4 py-3 bg-surface-light border border-gray-700 rounded-xl text-white focus:outline-none focus:border-primary-500 transition-colors"
+                  className="w-full px-4 py-3 bg-obsidian border border-steel-500 rounded-xl text-steel-100 focus:outline-none focus:border-gold focus:ring-1 focus:ring-gold/30 transition-all"
                 >
                   <option value="">무제한</option>
                   <option value="1">1일</option>

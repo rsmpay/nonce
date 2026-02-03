@@ -56,6 +56,7 @@ export function NewChatModal({ isOpen, onClose, onCreated }: NewChatModalProps) 
     try {
       if (type === "dm") {
         // Use the get_or_create_dm function
+        // @ts-expect-error - Supabase type inference issue
         const { data, error } = await supabase.rpc("get_or_create_dm", {
           other_user_id: selectedUsers[0].id,
         });
@@ -66,6 +67,7 @@ export function NewChatModal({ isOpen, onClose, onCreated }: NewChatModalProps) 
         // Create group or channel using database function
         const { data: conversationId, error: convError } = await supabase.rpc(
           "create_group_conversation",
+          // @ts-expect-error - Supabase type inference issue
           {
             conv_type: type,
             conv_name: name,
@@ -134,20 +136,20 @@ export function NewChatModal({ isOpen, onClose, onCreated }: NewChatModalProps) 
   return (
     <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center">
       <div
-        className="absolute inset-0 bg-black/60"
+        className="absolute inset-0 bg-obsidian/80 backdrop-blur-sm"
         onClick={onClose}
       />
-      <div className="relative w-full sm:max-w-md bg-surface rounded-t-2xl sm:rounded-2xl max-h-[80vh] flex flex-col">
+      <div className="relative w-full sm:max-w-md bg-onyx rounded-t-2xl sm:rounded-2xl max-h-[80vh] flex flex-col border border-gold-hairline vault-reveal vault-shadow">
         {/* Header */}
-        <div className="flex items-center justify-between p-4 border-b border-gray-800">
+        <div className="flex items-center justify-between p-4 border-b border-steel-500/30">
           <div className="flex items-center gap-2">
             {step !== "type" && (
               <button
                 onClick={handleBack}
-                className="p-1 hover:bg-surface-light rounded-full transition-colors"
+                className="p-1 hover:bg-glass rounded-lg transition-colors"
               >
                 <svg
-                  className="w-5 h-5 text-gray-400"
+                  className="w-5 h-5 text-steel-400"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -161,7 +163,7 @@ export function NewChatModal({ isOpen, onClose, onCreated }: NewChatModalProps) 
                 </svg>
               </button>
             )}
-            <h2 className="text-lg font-semibold text-white">
+            <h2 className="text-lg font-semibold text-steel-100 font-display">
               {step === "type" && "새 대화"}
               {step === "members" && (type === "dm" ? "대화 상대 선택" : "멤버 선택")}
               {step === "details" && (type === "group" ? "그룹 정보" : "채널 정보")}
@@ -169,10 +171,10 @@ export function NewChatModal({ isOpen, onClose, onCreated }: NewChatModalProps) 
           </div>
           <button
             onClick={onClose}
-            className="p-1 hover:bg-surface-light rounded-full transition-colors"
+            className="p-1 hover:bg-glass rounded-lg transition-colors"
           >
             <svg
-              className="w-5 h-5 text-gray-400"
+              className="w-5 h-5 text-steel-400"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -233,7 +235,7 @@ export function NewChatModal({ isOpen, onClose, onCreated }: NewChatModalProps) 
           {step === "members" && (
             <div className="space-y-4">
               {type !== "dm" && (
-                <p className="text-sm text-gray-400">
+                <p className="text-sm text-steel-400">
                   멤버를 선택하거나, 건너뛰고 나중에 초대 링크로 초대할 수 있습니다.
                 </p>
               )}
@@ -247,12 +249,12 @@ export function NewChatModal({ isOpen, onClose, onCreated }: NewChatModalProps) 
                   {selectedUsers.map((user) => (
                     <span
                       key={user.id}
-                      className="flex items-center gap-1 px-2 py-1 bg-primary-600/20 text-primary-400 rounded-full text-sm"
+                      className="flex items-center gap-1 px-2 py-1 bg-gold/10 text-gold-light rounded-lg text-sm border border-gold-hairline"
                     >
                       {user.nickname}
                       <button
                         onClick={() => handleSelectUser(user)}
-                        className="hover:text-primary-300"
+                        className="hover:text-gold"
                       >
                         <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -268,19 +270,19 @@ export function NewChatModal({ isOpen, onClose, onCreated }: NewChatModalProps) 
                     key={user.id}
                     onClick={() => handleSelectUser(user)}
                     className={cn(
-                      "w-full flex items-center gap-3 p-3 rounded-xl transition-colors",
+                      "w-full flex items-center gap-3 p-3 rounded-xl transition-all duration-200",
                       selectedUsers.find((u) => u.id === user.id)
-                        ? "bg-primary-600/20"
-                        : "hover:bg-surface-light"
+                        ? "bg-gold/10 border border-gold-hairline"
+                        : "hover:bg-glass border border-transparent"
                     )}
                   >
                     <Avatar src={user.avatar_url} name={user.nickname} size="md" />
                     <div className="flex-1 text-left">
-                      <p className="font-medium text-white">{user.nickname}</p>
-                      <p className="text-sm text-gray-400">{user.email}</p>
+                      <p className="font-medium text-steel-100">{user.nickname}</p>
+                      <p className="text-sm text-steel-400">{user.email}</p>
                     </div>
                     {selectedUsers.find((u) => u.id === user.id) && (
-                      <svg className="w-5 h-5 text-primary-500" fill="currentColor" viewBox="0 0 20 20">
+                      <svg className="w-5 h-5 text-gold" fill="currentColor" viewBox="0 0 20 20">
                         <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                       </svg>
                     )}
@@ -300,7 +302,7 @@ export function NewChatModal({ isOpen, onClose, onCreated }: NewChatModalProps) 
                 maxLength={50}
               />
               <div className="space-y-1.5">
-                <label className="block text-sm font-medium text-gray-300">
+                <label className="block text-sm font-medium text-steel-200">
                   설명 (선택)
                 </label>
                 <textarea
@@ -309,7 +311,7 @@ export function NewChatModal({ isOpen, onClose, onCreated }: NewChatModalProps) 
                   placeholder="설명을 입력하세요"
                   rows={3}
                   maxLength={200}
-                  className="w-full px-4 py-3 bg-surface-light border border-gray-700 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-primary-500 transition-colors resize-none"
+                  className="w-full px-4 py-3 bg-obsidian border border-steel-500 rounded-xl text-steel-100 placeholder-steel-400 focus:outline-none focus:border-gold focus:ring-1 focus:ring-gold/30 transition-all resize-none"
                 />
               </div>
             </div>
@@ -317,7 +319,7 @@ export function NewChatModal({ isOpen, onClose, onCreated }: NewChatModalProps) 
         </div>
 
         {/* Footer */}
-        <div className="p-4 border-t border-gray-800 safe-area-bottom">
+        <div className="p-4 border-t border-steel-500/30 safe-area-bottom">
           <Button
             onClick={step === "details" ? handleCreate : handleNext}
             disabled={!canProceed()}
@@ -354,26 +356,33 @@ function TypeOption({
     <button
       onClick={onClick}
       className={cn(
-        "w-full flex items-center gap-4 p-4 rounded-xl border transition-colors text-left",
+        "w-full flex items-center gap-4 p-4 rounded-xl border transition-all duration-200 text-left",
         selected
-          ? "border-primary-500 bg-primary-600/10"
-          : "border-gray-700 hover:border-gray-600 hover:bg-surface-light"
+          ? "border-gold bg-gold/5"
+          : "border-steel-500/30 hover:border-steel-400 hover:bg-glass"
       )}
     >
       <div
         className={cn(
-          "w-12 h-12 rounded-xl flex items-center justify-center",
-          selected ? "bg-primary-600 text-white" : "bg-surface-light text-gray-400"
+          "w-12 h-12 rounded-xl flex items-center justify-center transition-all",
+          selected
+            ? "bg-gradient-to-br from-gold to-gold-dark text-obsidian"
+            : "bg-glass text-steel-400"
         )}
       >
         {icon}
       </div>
       <div className="flex-1">
-        <p className="font-medium text-white">{title}</p>
-        <p className="text-sm text-gray-400">{description}</p>
+        <p className={cn(
+          "font-medium",
+          selected ? "text-gold-light" : "text-steel-100"
+        )}>
+          {title}
+        </p>
+        <p className="text-sm text-steel-400">{description}</p>
       </div>
       {selected && (
-        <svg className="w-5 h-5 text-primary-500" fill="currentColor" viewBox="0 0 20 20">
+        <svg className="w-5 h-5 text-gold" fill="currentColor" viewBox="0 0 20 20">
           <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
         </svg>
       )}

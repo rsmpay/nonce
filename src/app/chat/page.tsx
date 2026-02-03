@@ -33,17 +33,17 @@ export default function ChatPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
+      <div className="min-h-screen flex items-center justify-center bg-obsidian">
         <div className="flex flex-col items-center gap-4">
-          <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-primary-500" />
-          <p className="text-gray-400">로딩 중...</p>
+          <div className="w-8 h-8 border-2 border-gold/30 border-t-gold rounded-full animate-spin" />
+          <p className="text-steel-400">로딩 중...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="h-screen flex bg-background overflow-hidden">
+    <div className="h-screen flex bg-obsidian overflow-hidden">
       {/* Sidebar */}
       <Sidebar isOpen={isSidebarOpen} onClose={() => setSidebarOpen(false)} />
 
@@ -53,18 +53,18 @@ export default function ChatPage() {
         <div
           className={cn(
             "flex-1 flex flex-col",
-            activeConversation && "hidden md:flex md:w-80 md:border-r md:border-gray-800"
+            activeConversation && "hidden md:flex md:w-80 md:border-r md:border-steel-500/30"
           )}
         >
           {/* Header */}
-          <div className="flex items-center justify-between p-4 bg-surface border-b border-gray-800">
+          <div className="flex items-center justify-between p-4 bg-onyx border-b border-steel-500/30">
             <div className="flex items-center gap-3">
               <button
                 onClick={() => setSidebarOpen(true)}
-                className="p-2 -ml-2 hover:bg-surface-light rounded-full transition-colors lg:hidden"
+                className="p-2 -ml-2 hover:bg-glass rounded-lg transition-colors lg:hidden"
               >
                 <svg
-                  className="w-5 h-5 text-gray-400"
+                  className="w-5 h-5 text-steel-400"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -77,14 +77,14 @@ export default function ChatPage() {
                   />
                 </svg>
               </button>
-              <h1 className="text-xl font-bold text-white">대화</h1>
+              <h1 className="text-xl font-bold text-steel-100 font-display">대화</h1>
             </div>
             <button
               onClick={() => setIsNewChatOpen(true)}
-              className="p-2 hover:bg-surface-light rounded-full transition-colors"
+              className="p-2 hover:bg-glass rounded-lg transition-colors"
             >
               <svg
-                className="w-5 h-5 text-primary-500"
+                className="w-5 h-5 text-gold"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -115,11 +115,11 @@ export default function ChatPage() {
             />
           </div>
         ) : (
-          <div className="hidden md:flex flex-1 items-center justify-center bg-background">
+          <div className="hidden md:flex flex-1 items-center justify-center bg-obsidian">
             <div className="text-center">
-              <div className="w-20 h-20 mx-auto bg-surface-light rounded-full flex items-center justify-center mb-4">
+              <div className="w-20 h-20 mx-auto bg-glass rounded-xl flex items-center justify-center mb-4 border border-steel-500/30">
                 <svg
-                  className="w-10 h-10 text-gray-500"
+                  className="w-10 h-10 text-steel-500"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -132,7 +132,7 @@ export default function ChatPage() {
                   />
                 </svg>
               </div>
-              <p className="text-gray-400">대화를 선택하세요</p>
+              <p className="text-steel-400">대화를 선택하세요</p>
             </div>
           </div>
         )}

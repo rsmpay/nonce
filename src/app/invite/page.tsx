@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { Input } from "@/components/ui/Input";
@@ -14,7 +14,7 @@ interface ConversationInfo {
   member_count: number;
 }
 
-export default function InvitePage() {
+function InvitePageContent() {
   const searchParams = useSearchParams();
   const initialCode = searchParams.get("code") || "";
   const [code, setCode] = useState(initialCode);
@@ -38,12 +38,14 @@ export default function InvitePage() {
 
     try {
       // First try to get conversation info (for conversation invites)
+      // @ts-expect-error - Supabase type inference issue
       const { data, error: rpcError } = await supabase.rpc("get_conversation_by_invite_code", {
         invite_code: inviteCode.trim(),
       });
 
-      if (!rpcError && data && data.length > 0) {
-        setConversationInfo(data[0]);
+      const result = data as ConversationInfo[] | null;
+      if (!rpcError && result && result.length > 0) {
+        setConversationInfo(result[0]);
       } else {
         setConversationInfo(null);
       }
@@ -79,6 +81,7 @@ export default function InvitePage() {
 
       // If it's a conversation invite
       if (conversationInfo) {
+        // @ts-expect-error - Supabase type inference issue
         const { data, error: joinError } = await supabase.rpc("join_conversation_by_invite", {
           invite_code: code.trim(),
         });
@@ -93,6 +96,7 @@ export default function InvitePage() {
       // Otherwise, it's a community invite
       const { data: isValid, error: validateError } = await supabase.rpc(
         "validate_invite_code",
+        // @ts-expect-error - Supabase type inference issue
         { invite_code: code.trim() }
       );
 
@@ -105,6 +109,7 @@ export default function InvitePage() {
       }
 
       // Use invite code
+      // @ts-expect-error - Supabase type inference issue
       const { error: useError } = await supabase.rpc("use_invite_code", {
         invite_code: code.trim(),
       });
@@ -139,8 +144,8 @@ export default function InvitePage() {
 
   if (checkingCode) {
     return (
-      <main className="min-h-screen flex items-center justify-center bg-gradient-to-b from-background to-surface">
-        <div className="animate-spin h-8 w-8 border-2 border-primary-500 border-t-transparent rounded-full" />
+      <main className="min-h-screen flex items-center justify-center bg-gradient-to-b from-obsidian to-onyx">
+        <div className="w-8 h-8 border-2 border-gold/30 border-t-gold rounded-full animate-spin" />
       </main>
     );
   }
@@ -148,24 +153,24 @@ export default function InvitePage() {
   // Show conversation invite UI if we have conversation info
   if (conversationInfo) {
     return (
-      <main className="min-h-screen flex flex-col items-center justify-center p-6 bg-gradient-to-b from-background to-surface">
+      <main className="min-h-screen flex flex-col items-center justify-center p-6 bg-gradient-to-b from-obsidian to-onyx">
         <div className="max-w-md w-full text-center space-y-6">
           {/* Icon */}
-          <div className="w-20 h-20 mx-auto bg-primary-600/20 rounded-full flex items-center justify-center">
-            <svg className="w-10 h-10 text-primary-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <div className="w-20 h-20 mx-auto bg-gold/10 rounded-xl flex items-center justify-center border border-gold-hairline">
+            <svg className="w-10 h-10 text-gold" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
             </svg>
           </div>
 
           {/* Info */}
           <div className="space-y-2">
-            <p className="text-sm text-gray-400">
+            <p className="text-sm text-steel-400">
               {typeLabel[conversationInfo.conversation_type]}에 초대되었습니다
             </p>
-            <h1 className="text-2xl font-bold text-white">
+            <h1 className="text-2xl font-bold text-steel-100 font-display">
               {conversationInfo.conversation_name || "대화방"}
             </h1>
-            <p className="text-gray-400">
+            <p className="text-steel-400">
               {conversationInfo.member_count}명의 멤버
             </p>
           </div>
@@ -200,17 +205,17 @@ export default function InvitePage() {
 
   // Default community invite UI
   return (
-    <main className="min-h-screen flex flex-col items-center justify-center p-6 bg-gradient-to-b from-background to-surface">
+    <main className="min-h-screen flex flex-col items-center justify-center p-6 bg-gradient-to-b from-obsidian to-onyx">
       <div className="max-w-md w-full space-y-8">
         {/* Header */}
         <div className="text-center space-y-2">
           <Link href="/" className="inline-block">
-            <div className="w-16 h-16 mx-auto bg-primary-600 rounded-xl flex items-center justify-center">
-              <span className="text-2xl font-bold text-white">N</span>
+            <div className="w-16 h-16 mx-auto bg-gradient-to-br from-gold to-gold-dark rounded-xl flex items-center justify-center shadow-gold-lg">
+              <span className="text-2xl font-bold text-obsidian font-display">N</span>
             </div>
           </Link>
-          <h1 className="text-2xl font-bold text-white">초대 코드 입력</h1>
-          <p className="text-gray-400">
+          <h1 className="text-2xl font-bold text-steel-100 font-display">초대 코드 입력</h1>
+          <p className="text-steel-400">
             커뮤니티에 참여하려면 초대 코드를 입력하세요
           </p>
         </div>
@@ -234,7 +239,7 @@ export default function InvitePage() {
             }}
             placeholder="초대 코드 입력"
             maxLength={20}
-            className="text-center text-lg tracking-widest"
+            className="text-center text-lg tracking-widest font-mono"
           />
           <Button
             type="submit"
@@ -248,14 +253,30 @@ export default function InvitePage() {
 
         {/* Footer */}
         <div className="text-center">
-          <p className="text-sm text-gray-500">
+          <p className="text-sm text-steel-500">
             이미 계정이 있으신가요?{" "}
-            <Link href="/auth/login" className="text-primary-500 hover:underline">
+            <Link href="/auth/login" className="text-gold hover:underline">
               로그인
             </Link>
           </p>
         </div>
       </div>
     </main>
+  );
+}
+
+function LoadingFallback() {
+  return (
+    <main className="min-h-screen flex items-center justify-center bg-gradient-to-b from-obsidian to-onyx">
+      <div className="w-8 h-8 border-2 border-gold/30 border-t-gold rounded-full animate-spin" />
+    </main>
+  );
+}
+
+export default function InvitePage() {
+  return (
+    <Suspense fallback={<LoadingFallback />}>
+      <InvitePageContent />
+    </Suspense>
   );
 }

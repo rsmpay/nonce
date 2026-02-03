@@ -73,7 +73,8 @@ export function useConversations() {
       return;
     }
 
-    const conversationIds = memberData.map((m) => m.conversation_id);
+    const typedMemberData = memberData as Array<{ conversation_id: string; conversations: unknown }>;
+    const conversationIds = typedMemberData.map((m) => m.conversation_id);
 
     // Get all members for these conversations
     const { data: allMembers } = await supabase
@@ -99,15 +100,17 @@ export function useConversations() {
       .order("created_at", { ascending: false });
 
     // Build conversation objects
-    const conversationsWithDetails: ConversationWithDetails[] = memberData
+    const conversationsWithDetails: ConversationWithDetails[] = typedMemberData
       .map((m) => {
         const conv = m.conversations as unknown as ConversationWithDetails;
         if (!conv) return null;
 
-        const members = (allMembers || []).filter(
+        const typedAllMembers = (allMembers || []) as Array<{ conversation_id: string; user: unknown }>;
+        const typedLastMessages = (lastMessages || []) as Array<{ conversation_id: string }>;
+        const members = typedAllMembers.filter(
           (member) => member.conversation_id === conv.id
         );
-        const lastMessage = (lastMessages || []).find(
+        const lastMessage = typedLastMessages.find(
           (msg) => msg.conversation_id === conv.id
         );
 

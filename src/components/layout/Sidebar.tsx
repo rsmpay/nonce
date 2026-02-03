@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { Avatar } from "@/components/ui/Avatar";
 import { useChatStore } from "@/stores/chat";
 import { createClient } from "@/lib/supabase/client";
@@ -15,6 +15,7 @@ interface SidebarProps {
 export function Sidebar({ isOpen, onClose }: SidebarProps) {
   const { currentUser } = useChatStore();
   const router = useRouter();
+  const pathname = usePathname();
   const supabase = createClient();
 
   const handleSignOut = async () => {
@@ -30,7 +31,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
       {/* Overlay */}
       {isOpen && (
         <div
-          className="fixed inset-0 bg-black/60 z-40 lg:hidden"
+          className="fixed inset-0 bg-obsidian/80 backdrop-blur-sm z-40 lg:hidden"
           onClick={onClose}
         />
       )}
@@ -38,25 +39,31 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
       {/* Sidebar */}
       <div
         className={cn(
-          "fixed top-0 left-0 h-full w-72 bg-surface z-50 transform transition-transform duration-300 ease-in-out lg:relative lg:translate-x-0",
+          "fixed top-0 left-0 h-full w-72 bg-onyx z-50",
+          "border-r border-steel-500/30",
+          "transform transition-transform duration-300 ease-out",
+          "lg:relative lg:translate-x-0",
           isOpen ? "translate-x-0" : "-translate-x-full"
         )}
       >
+        {/* Gold accent line */}
+        <div className="absolute left-0 top-0 bottom-0 w-0.5 bg-gradient-to-b from-gold via-gold-dark to-transparent" />
+
         <div className="flex flex-col h-full">
           {/* Header */}
-          <div className="flex items-center justify-between p-4 border-b border-gray-800">
+          <div className="flex items-center justify-between p-4 border-b border-steel-500/30">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-primary-600 rounded-lg flex items-center justify-center">
-                <span className="text-lg font-bold text-white">N</span>
+              <div className="w-10 h-10 bg-gradient-to-br from-gold to-gold-dark rounded-lg flex items-center justify-center shadow-gold-sm">
+                <span className="text-lg font-bold text-obsidian font-display">N</span>
               </div>
-              <span className="font-semibold text-white">Nonce</span>
+              <span className="font-semibold text-steel-100 font-display">Nonce</span>
             </div>
             <button
               onClick={onClose}
-              className="p-2 hover:bg-surface-light rounded-full transition-colors lg:hidden"
+              className="p-2 hover:bg-glass rounded-lg transition-colors lg:hidden"
             >
               <svg
-                className="w-5 h-5 text-gray-400"
+                className="w-5 h-5 text-steel-400"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -71,29 +78,31 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
             </button>
           </div>
 
-          {/* User info */}
+          {/* User info - Premium Card Style */}
           {currentUser && (
-            <div className="p-4 border-b border-gray-800">
-              <div className="flex items-center gap-3">
-                <Avatar
-                  src={currentUser.avatar_url}
-                  name={currentUser.nickname}
-                  size="lg"
-                />
-                <div className="flex-1 min-w-0">
-                  <p className="font-medium text-white truncate">
-                    {currentUser.nickname}
-                  </p>
-                  <p className="text-sm text-gray-400 truncate">
-                    {currentUser.email}
-                  </p>
+            <div className="p-4 border-b border-steel-500/30">
+              <div className="p-3 rounded-xl bg-glass border border-gold-hairline vault-shadow">
+                <div className="flex items-center gap-3">
+                  <Avatar
+                    src={currentUser.avatar_url}
+                    name={currentUser.nickname}
+                    size="lg"
+                  />
+                  <div className="flex-1 min-w-0">
+                    <p className="font-medium text-steel-100 truncate">
+                      {currentUser.nickname}
+                    </p>
+                    <p className="text-sm text-steel-400 truncate">
+                      {currentUser.email}
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
           )}
 
           {/* Menu */}
-          <nav className="flex-1 p-2">
+          <nav className="flex-1 p-2 space-y-1">
             <MenuItem
               href="/chat"
               icon={
@@ -112,6 +121,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                 </svg>
               }
               label="대화"
+              isActive={pathname === "/chat"}
               onClick={onClose}
             />
             <MenuItem
@@ -132,12 +142,13 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                 </svg>
               }
               label="프로필 설정"
+              isActive={pathname === "/profile"}
               onClick={onClose}
             />
             {isAdmin && (
               <>
-                <div className="my-2 px-3">
-                  <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                <div className="my-3 px-3">
+                  <p className="text-xs font-semibold text-steel-500 uppercase tracking-wider">
                     관리
                   </p>
                 </div>
@@ -159,6 +170,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                     </svg>
                   }
                   label="멤버 관리"
+                  isActive={pathname === "/admin/members"}
                   onClick={onClose}
                 />
                 <MenuItem
@@ -179,6 +191,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                     </svg>
                   }
                   label="초대 링크 관리"
+                  isActive={pathname === "/admin/invites"}
                   onClick={onClose}
                 />
               </>
@@ -186,10 +199,10 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
           </nav>
 
           {/* Footer */}
-          <div className="p-4 border-t border-gray-800">
+          <div className="p-4 border-t border-steel-500/30">
             <button
               onClick={handleSignOut}
-              className="w-full flex items-center gap-3 px-3 py-2.5 text-gray-400 hover:text-white hover:bg-surface-light rounded-xl transition-colors"
+              className="w-full flex items-center gap-3 px-3 py-2.5 text-steel-400 hover:text-steel-100 hover:bg-glass rounded-xl transition-all duration-200"
             >
               <svg
                 className="w-5 h-5"
@@ -217,18 +230,24 @@ interface MenuItemProps {
   href: string;
   icon: React.ReactNode;
   label: string;
+  isActive?: boolean;
   onClick?: () => void;
 }
 
-function MenuItem({ href, icon, label, onClick }: MenuItemProps) {
+function MenuItem({ href, icon, label, isActive, onClick }: MenuItemProps) {
   return (
     <Link
       href={href}
       onClick={onClick}
-      className="flex items-center gap-3 px-3 py-2.5 text-gray-400 hover:text-white hover:bg-surface-light rounded-xl transition-colors"
+      className={cn(
+        "flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200",
+        isActive
+          ? "text-gold bg-gradient-to-r from-gold/10 to-transparent border-l-2 border-gold ml-[-2px] pl-[14px]"
+          : "text-steel-400 hover:text-steel-100 hover:bg-glass"
+      )}
     >
       {icon}
-      <span>{label}</span>
+      <span className={isActive ? "font-medium" : ""}>{label}</span>
     </Link>
   );
 }

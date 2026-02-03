@@ -1,8 +1,19 @@
 import type { Metadata, Viewport } from "next";
-import { Inter } from "next/font/google";
+import { Geist } from "next/font/google";
+import { Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 
-const inter = Inter({ subsets: ["latin"] });
+const geist = Geist({
+  subsets: ["latin"],
+  variable: "--font-geist",
+  display: "swap",
+});
+
+const jakarta = Plus_Jakarta_Sans({
+  subsets: ["latin"],
+  variable: "--font-jakarta",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: "Nonce - 블록체인 커뮤니티",
@@ -20,7 +31,7 @@ export const viewport: Viewport = {
   initialScale: 1,
   maximumScale: 1,
   userScalable: false,
-  themeColor: "#0f0f0f",
+  themeColor: "#09090b",
 };
 
 export default function RootLayout({
@@ -29,8 +40,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ko">
-      <body className={`${inter.className} bg-background text-white`}>
+    <html lang="ko" className={`${geist.variable} ${jakarta.variable}`}>
+      <body className="font-sans bg-obsidian text-steel-100 antialiased">
         {children}
       </body>
     </html>

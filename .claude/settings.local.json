@@ -16,7 +16,17 @@
       "WebFetch(domain:multitaskai.com)",
       "Bash(xargs:*)",
       "Bash(git init:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(gh repo create:*)",
+      "Bash(brew install:*)",
+      "Bash(gh auth:*)",
+      "Bash(vercel login:*)",
+      "mcp__plugin_supabase_supabase__generate_typescript_types",
+      "Bash(npm run build:*)",
+      "mcp__plugin_supabase_supabase__get_advisors",
+      "Bash(npm update:*)",
+      "Bash(npm ls:*)"
     ]
   }
 }
